@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAKABOZOZ STAKE FARM</title>
+    <link rel="stylesheet" href="src/styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Add Web3.js -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-brand">NAKABOZOZ</div>
+        <div class="nav-links">
+            <a href="https://twitter.com/nakabozoz" target="_blank" class="nav-link"><i class="fab fa-twitter"></i></a>
+            <a href="https://t.me/nakabozoz" target="_blank" class="nav-link"><i class="fab fa-telegram"></i></a>
+            <a href="https://opensea.io/collection/nakabozoz" target="_blank" class="nav-link"><i class="fas fa-ship"></i></a>
+            <button id="themeToggle" class="pixel-button theme-toggle" aria-label="Toggle theme">
+                <span class="theme-icon">🌙</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Connect Wallet Section -->
+        <div class="connect-section">
+            <h1 class="retro-title">NAKABOZOZ STAKE FARM</h1>
+            <p class="retro-text">STAKE YOUR NFTz. EARN REWARDz.</p>
+            <button id="connectWallet" class="pixel-button connect-btn">CONNECT WALLET</button>
+        </div>
+    </div>
+
+    <noscript>
+      <div style="background: #ffcccc; color: #900; padding: 16px; text-align: center; font-weight: bold;">
+        JavaScript is required for this app to work. Please enable JavaScript in your browser.
+      </div>
+    </noscript>
+    <div id="jsErrorWarning" style="display:none; background: #ffcccc; color: #900; padding: 16px; text-align: center; font-weight: bold;">
+      The app failed to load. Please check your internet connection or contact support.
+    </div>
+    <script src="src/js/app.js" onerror="document.getElementById('jsErrorWarning').style.display='block';"></script>
+</body>
+</html> 

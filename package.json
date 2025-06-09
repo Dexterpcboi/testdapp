@@ -1,0 +1,19 @@
+{
+  "name": "nakabozo-stake-farm",
+  "version": "1.0.0",
+  "description": "Pixel Pacman Retro-Themed NFT Staking Platform",
+  "main": "index.js",
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "ethers": "^6.7.0",
+    "vite": "^4.4.9",
+    "web3": "^4.16.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.0.4"
+  }
+}

@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAKABOZOZ STAKE FARM - Dashboard</title>
+    <link rel="stylesheet" href="src/styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Add Web3.js -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-brand">NAKABOZOZ</div>
+        <div class="nav-links">
+            <a href="https://twitter.com/nakabozoz" target="_blank" class="nav-link"><i class="fab fa-twitter"></i></a>
+            <a href="https://t.me/nakabozoz" target="_blank" class="nav-link"><i class="fab fa-telegram"></i></a>
+            <a href="https://opensea.io/collection/nakabozoz" target="_blank" class="nav-link"><i class="fas fa-ship"></i></a>
+            <button id="themeToggle" class="pixel-button theme-toggle" aria-label="Toggle theme">
+                <span class="theme-icon">🌙</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <div class="main-content">
+        <div class="dashboard">
+            <div class="dashboard-header">
+                <h2 class="retro-title">DASHBOARD</h2>
+                <div class="header-actions">
+                    <div id="dashboardWalletInfo" class="wallet-info">Not Connected</div>
+                    <button id="dashboardDisconnect" class="pixel-button disconnect-btn">DISCONNECT</button>
+                </div>
+            </div>
+
+            <!-- Owned NFTs Section -->
+            <section class="dashboard-section">
+                <h3 class="retro-subtitle">YOUR NFTz</h3>
+                <div class="gallery-container"></div>
+            </section>
+
+            <!-- Staked NFTs Section -->
+            <section class="dashboard-section">
+                <h3 class="retro-subtitle">STAKED NFTz</h3>
+                <div class="staked-gallery-container"></div>
+            </section>
+
+            <!-- Staking Actions Section -->
+            <section class="dashboard-section">
+                <h3 class="retro-subtitle">ACTIONz</h3>
+                <div class="action-container">
+                    <div class="action-selector">
+                        <button class="action-tab active" data-action="stake">STAKE</button>
+                        <button class="action-tab" data-action="unstake">UNSTAKE</button>
+                        <button class="action-tab" data-action="claim">CLAIM</button>
+                        <button class="action-tab" data-action="exit">EXIT</button>
+                    </div>
+                    <button id="mainActionButton" class="pixel-button main-action-btn">STAKE SELECTED</button>
+                    <div class="action-status">
+                        <div class="status-indicator"></div>
+                        <span class="status-text">Ready</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Rewards Section -->
+            <section class="dashboard-section">
+                <h3 class="retro-subtitle">REWARDz</h3>
+                <div class="rewards-info">
+                    <div class="info-item">
+                        <span class="label">Available Rewards:</span>
+                        <span id="totalRewards" class="value">0 REWARD</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Reward Rate:</span>
+                        <span id="rewardRate" class="value">0 REWARD/day</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Total Staked:</span>
+                        <span id="totalStaked" class="value">0 NFTs</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Staking Progress:</span>
+                        <div class="staking-progress-container">
+                            <div class="progress-bar">
+                                <div id="stakingProgress" class="progress-fill"></div>
+                            </div>
+                            <span id="stakingProgressText" class="progress-text">0%</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Time Until Claim:</span>
+                        <span id="timeUntilClaim" class="value">7 days</span>
+                    </div>
+                </div>
+                <button id="claimButton" class="pixel-button action-btn">CLAIM REWARDz</button>
+            </section>
+
+            <!-- Contract Balance Section -->
+            <section class="dashboard-section">
+                <h3 class="retro-subtitle">Contract Balance</h3>
+                <div class="contract-balance">
+                    <p id="contractBalance">Loading...</p>
+                </div>
+            </section>
+
+            <!-- Staking Info Section -->
+            <section class="dashboard-section">
+                <h3 class="retro-subtitle">STAKING INFO</h3>
+                <div class="staking-info">
+                    <!-- Pool Status -->
+                    <div class="info-group">
+                        <h4>Pool Status</h4>
+                        <div id="poolStatus" class="pool-status">
+                            <div class="status-item">
+                                <span>Loading pool status...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Staking Stats -->
+                    <div class="info-group">
+                        <h4>Your Stats</h4>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="label">Total Staked:</span>
+                                <span id="totalStaked" class="value">0 NFTs</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Total Rewards:</span>
+                                <span id="totalRewards" class="value">0 REWARD</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Reward Rate:</span>
+                                <span id="rewardRate" class="value">0 REWARD/day</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Pool Balance:</span>
+                                <span id="poolBalance" class="value">0 tokens</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Staking Progress -->
+                    <div class="info-group">
+                        <h4>Staking Progress</h4>
+                        <div class="staking-progress-container">
+                            <div class="progress-bar">
+                                <div id="stakingPeriodProgress" class="progress"></div>
+                            </div>
+                            <div id="timeUntilClaim" class="countdown">No NFTs staked</div>
+                        </div>
+                    </div>
+
+                    <!-- Rewards Breakdown -->
+                    <div class="info-group">
+                        <h4>Rewards Breakdown</h4>
+                        <div id="rewardsList" class="rewards-list">
+                            <!-- Rewards will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <button id="stakeButton" class="pixel-button action-btn" onclick="stakeSelectedNFTs()">STAKE SELECTED</button>
+                        <button id="unstakeButton" class="pixel-button action-btn" onclick="unstakeSelectedNFTs()">UNSTAKE SELECTED</button>
+                        <button id="claimButton" class="pixel-button action-btn" onclick="claimRewards()">CLAIM REWARDS</button>
+                        <button id="exitButton" class="pixel-button action-btn exit-btn" onclick="exitStaking()">EXIT & CLAIM ALL</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <style>
+    .pool-status {
+        background: rgba(0, 0, 0, 0.7);
+        border: 2px solid #00ff00;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+
+    .status-item {
+        display: flex;
+        justify-content: space-between;
+        margin: 10px 0;
+        color: #00ff00;
+        font-family: 'Press Start 2P', cursive;
+        font-size: 12px;
+    }
+
+    .status-item span:first-child {
+        color: #fff;
+    }
+
+    .staking-info {
+        background: rgba(0, 0, 0, 0.7);
+        border: 2px solid #00ff00;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+    }
+
+    .info-group {
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+    }
+
+    .info-group:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .info-group h4 {
+        color: #00ff00;
+        margin-bottom: 15px;
+        font-family: 'Press Start 2P', cursive;
+        font-size: 14px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 4px;
+    }
+
+    .info-item .label {
+        color: #fff;
+        font-size: 12px;
+    }
+
+    .info-item .value {
+        color: #00ff00;
+        font-weight: bold;
+    }
+
+    .staking-progress-container {
+        margin: 15px 0;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 20px;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 10px;
+    }
+
+    .progress {
+        width: 0%;
+        height: 100%;
+        background: #00ff00;
+        transition: width 0.3s ease;
+    }
+
+    .countdown {
+        text-align: center;
+        color: #00ff00;
+        font-size: 12px;
+        font-family: 'Press Start 2P', cursive;
+    }
+
+    .rewards-list {
+        max-height: 200px;
+        overflow-y: auto;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 4px;
+        padding: 10px;
+    }
+
+    .reward-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px;
+        border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+        color: #fff;
+        font-size: 12px;
+    }
+
+    .reward-item:last-child {
+        border-bottom: none;
+    }
+
+    .action-buttons {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .action-btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 14px;
+        font-family: 'Press Start 2P', cursive;
+    }
+
+    .exit-btn {
+        grid-column: span 2;
+        background: #ff0000;
+    }
+
+    .exit-btn:hover {
+        background: #cc0000;
+    }
+
+    .action-container {
+        background: rgba(0, 0, 0, 0.7);
+        border: 2px solid #00ff00;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+    }
+
+    .action-selector {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        justify-content: center;
+    }
+
+    .action-tab {
+        background: rgba(0, 0, 0, 0.5);
+        border: 2px solid #00ff00;
+        color: #00ff00;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: 'Press Start 2P', cursive;
+        font-size: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .action-tab:hover {
+        background: rgba(0, 255, 0, 0.2);
+        transform: translateY(-2px);
+    }
+
+    .action-tab.active {
+        background: #00ff00;
+        color: #000;
+    }
+
+    .main-action-btn {
+        width: 100%;
+        padding: 15px;
+        font-size: 16px;
+        font-family: 'Press Start 2P', cursive;
+        background: #00ff00;
+        color: #000;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .main-action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 255, 0, 0.3);
+    }
+
+    .main-action-btn:active {
+        transform: translateY(1px);
+    }
+
+    .main-action-btn::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+            45deg,
+            transparent,
+            rgba(255, 255, 255, 0.1),
+            transparent
+        );
+        transform: rotate(45deg);
+        transition: all 0.3s ease;
+    }
+
+    .main-action-btn:hover::after {
+        animation: shine 1.5s infinite;
+    }
+
+    .action-status {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 15px;
+        gap: 10px;
+    }
+
+    .status-indicator {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #00ff00;
+        animation: pulse 2s infinite;
+    }
+
+    .status-text {
+        color: #00ff00;
+        font-family: 'Press Start 2P', cursive;
+        font-size: 12px;
+    }
+
+    @keyframes shine {
+        0% {
+            transform: translateX(-100%) rotate(45deg);
+        }
+        100% {
+            transform: translateX(100%) rotate(45deg);
+        }
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        50% {
+            transform: scale(1.2);
+            opacity: 0.7;
+        }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    /* Add animation classes */
+    .fade-in {
+        animation: fadeIn 0.5s ease-in;
+    }
+
+    .slide-up {
+        animation: slideUp 0.5s ease-out;
+    }
+
+    .bounce {
+        animation: bounce 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    /* Update existing styles */
+    .dashboard-section {
+        animation: fadeIn 0.5s ease-in;
+    }
+
+    .nft-card {
+        transition: all 0.3s ease;
+    }
+
+    .nft-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 255, 0, 0.2);
+    }
+
+    .nft-card.selected {
+        animation: bounce 0.5s ease;
+    }
+
+    .progress-bar {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .progress-bar::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(0, 255, 0, 0.2),
+            transparent
+        );
+        animation: progressShine 2s infinite;
+    }
+
+    @keyframes progressShine {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+    </style>
+
+    <script src="src/js/app.js"></script>
+    <script>
+        // Add this to your existing JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            const actionTabs = document.querySelectorAll('.action-tab');
+            const mainActionButton = document.getElementById('mainActionButton');
+            const statusText = document.querySelector('.status-text');
+            const statusIndicator = document.querySelector('.status-indicator');
+
+            // Handle action tab clicks
+            actionTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs
+                    actionTabs.forEach(t => t.classList.remove('active'));
+                    // Add active class to clicked tab
+                    tab.classList.add('active');
+                    
+                    // Update main button text and action
+                    const action = tab.dataset.action;
+                    mainActionButton.textContent = `${action.toUpperCase()} SELECTED`;
+                    mainActionButton.dataset.action = action;
+
+                    // Add animation
+                    mainActionButton.classList.add('bounce');
+                    setTimeout(() => mainActionButton.classList.remove('bounce'), 500);
+                });
+            });
+
+            // Handle main action button click
+            mainActionButton.addEventListener('click', async () => {
+                const action = mainActionButton.dataset.action;
+                statusText.textContent = 'Processing...';
+                statusIndicator.style.background = '#ffd700';
+
+                try {
+                    switch(action) {
+                        case 'stake':
+                            await stakeSelectedNFTs();
+                            break;
+                        case 'unstake':
+                            await unstakeSelectedNFTs();
+                            break;
+                        case 'claim':
+                            await claimRewards();
+                            break;
+                        case 'exit':
+                            await exitStaking();
+                            break;
+                    }
+                    statusText.textContent = 'Success!';
+                    statusIndicator.style.background = '#00ff00';
+                } catch (error) {
+                    statusText.textContent = 'Failed';
+                    statusIndicator.style.background = '#ff0000';
+                }
+
+                // Reset status after 3 seconds
+                setTimeout(() => {
+                    statusText.textContent = 'Ready';
+                    statusIndicator.style.background = '#00ff00';
+                }, 3000);
+            });
+        });
+    </script>
+</body>
+</html> 
